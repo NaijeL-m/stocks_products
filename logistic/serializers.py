@@ -53,7 +53,13 @@ class StockSerializer(serializers.ModelSerializer):
 
         # обновляем склад по его параметрам
         stock = super().update(instance, validated_data)
-
+        for i in positions:
+            StockProduct.objects.update_or_create(
+                stock= Stock.objects.get(id= stock.id),
+                product= i["product"],
+                quantity= i["quantity"],
+                price= i["price"],
+            )
         # здесь вам надо обновить связанные таблицы
         # в нашем случае: таблицу StockProduct
         # с помощью списка positions
